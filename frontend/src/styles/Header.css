@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+.header-container {
+  height: 10vh;
+  width: 100%;
+  display: flex;
+  border-bottom: 0.1px solid rgb(248, 229, 229);
+  flex-direction: row;
+  position: relative;
+}
+
+.threadit-left-container {
+  height: 100%;
+  width: 25%;
+  display: flex;
+  align-items: center;
+}
+
+.threadit-left-container h1 {
+  font-size: 30px;
+  color: red;
+  font-family: "Nunito", sans-serif;
+  margin-left: 10%;
+}
+
+.search-bar-middle-container {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar-wrapper {
+  height: 70%;
+  width: 60%;
+  display: flex;
+}
+
+.search-bar-label {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar-label input {
+  height: 70%;
+  width: 90%;
+  border-radius: 30px;
+  border: none;
+  padding-left: 10px;
+  outline: none;
+  background-color: rgb(69, 68, 68);
+  color: rgb(203, 202, 202);
+
+  caret-color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+
+  transition: background-color 0.3s ease;
+}
+
+.search-bar-label input:focus {
+  background-color: rgb(85, 85, 85);
+}
+
+.search-bar-label input::placeholder {
+  color: rgb(203, 202, 202);
+}
+
+.search-bar-label input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.profile-information-right-container {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.right-container-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 80%;
+}
+
+.profile-icon-container {
+  height: 100%;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.sign-in-button-container {
+  height: 100%;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-in-button-container button {
+  font-family: "Inter", sans-serif;
+  width: 55%;
+  height: 48%;
+
+  color: white;
+  background-color: red;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.3);
+}
+
+.sign-in-button-container button:hover {
+  background-color: #ff3333;
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.5);
+}
+
+.sign-in-button-container button:active {
+  background-color: #cc0000;
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.4);
+}
+
+.profile-icon {
+  height: 35%;
+  width: 35%;
+  cursor: pointer;
+  color: #ff4d4d;
+}
+
+@media screen and (max-width: 1470px) and (max-height: 930px) {
+  .sign-in-button-container button {
+    width: 63%;
+    height: 50%;
+  }
+
+  .search-bar-label input {
+    height: 80%;
+  }
+}
