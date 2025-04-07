@@ -5,14 +5,16 @@
 .threads-advertising-container {
   width: 100%;
   height: 90vh;
+
+  min-height: 90vh;
   display: flex;
   justify-content: center;
   z-index: 10;
-  /* background-color: yellow; */
 }
 
 .threads-advertising-wrapper {
   height: 100%;
+  min-height: 100%;
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -22,9 +24,11 @@
 
 .news-container,
 .gym-container,
-.food-container {
+.food-container,
+#new-thread-container {
   width: 100%;
   height: 32%;
+  min-height: 32%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -32,7 +36,8 @@
 
 .news-container-wrapper,
 .gym-container-wrapper,
-.food-container-wrapper {
+.food-container-wrapper,
+#new-thread-container-wrapper {
   height: 90%;
   width: 70%;
   cursor: pointer;
@@ -45,7 +50,8 @@
 
 .news-container-wrapper:hover,
 .gym-container-wrapper:hover,
-.food-container-wrapper:hover {
+.food-container-wrapper:hover,
+#new-thread-container-wrapper:hover {
   opacity: 0.8;
   transform: scale(1.02);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -54,7 +60,8 @@
 
 .news-container-wrapper:active,
 .gym-container-wrapper:active,
-.food-container-wrapper:active {
+.food-container-wrapper:active,
+#new-thread-container-wrapper:active {
   opacity: 0.6;
   transform: scale(0.98);
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
@@ -62,6 +69,7 @@
 }
 
 .group-chat-name-container {
+  position: relative;
   height: 15%;
   width: 100%;
   display: flex;
@@ -81,6 +89,13 @@
   height: 65%;
   width: 65%;
   border-radius: 50%;
+}
+
+.delete-thread-icon {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: white;
 }
 
 .group-name-container {
@@ -112,14 +127,16 @@
 
 .news-group-text-1,
 .gym-group-text-1,
-.food-group-text-1 {
+.food-group-text-1,
+#new-thread-group-text-1 {
   height: 45%;
   width: 100%;
 }
 
 .news-group-text-1 h3,
 .gym-group-text-1 h3,
-.food-group-text-1 h3 {
+.food-group-text-1 h3,
+#new-thread-group-text-1 h3 {
   margin-left: 2%;
   color: whitesmoke;
   font-size: 14px;
@@ -194,6 +211,18 @@
 .visit-button-container {
   height: 100%;
   width: 65%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.visit-button-link {
+  height: 100%;
+  width: 65%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
 }
 
 .view-button-link {
@@ -207,7 +236,8 @@
 
 .visit-news-chat-button,
 .visit-gym-chat-button,
-.visit-food-chat-button {
+.visit-food-chat-button,
+#new-thread-chat-button {
   background-color: red;
   color: white;
   border-radius: 10px;
@@ -222,7 +252,8 @@
 
 .visit-news-chat-button:hover,
 .visit-gym-chat-button:hover,
-.visit-food-chat-button:hover {
+.visit-food-chat-button:hover,
+#new-thread-chat-button:hover {
   background-color: #ff3333;
   transform: scale(1.05);
   box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.5);
@@ -230,7 +261,8 @@
 
 .visit-news-chat-button:active,
 .visit-gym-chat-button:active,
-.visit-food-chat-button:active {
+.visit-food-chat-button:active,
+#new-thread-chat-button:active {
   background-color: #cc0000;
   transform: scale(0.95);
   box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.4);

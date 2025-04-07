@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/ThreadsAdvertising.css";
 import axios from "axios";
 import ThreadAd from "./AddThread";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const ThreadsAdvertising = () => {
   const [threads, setThreads] = useState([]);
@@ -13,7 +13,20 @@ const ThreadsAdvertising = () => {
     axios
       .get("http://localhost:5001/threads")
       .then((res) => {
-        setThreads(res.data);
+        const threads = res.data;
+        const lastVisitedId = localStorage.getItem("lastVisitedThreadId");
+
+        if (lastVisitedId) {
+          // move the last visited threads at the top
+          const sortedThreads = [
+            ...threads.filter((t) => t.id === parseInt(lastVisitedId)),
+            ...threads.filter((t) => t.id !== parseInt(lastVisitedId)),
+          ];
+          setThreads(sortedThreads);
+        } else {
+          setThreads(threads);
+        }
+
         setLoading(false);
       })
       .catch((err) => {
@@ -21,6 +34,12 @@ const ThreadsAdvertising = () => {
         setLoading(false);
       });
   }, []);
+
+  const handleDeleteThread = (id) => {
+    setThreads((prevThreads) =>
+      prevThreads.filter((thread) => thread.id !== id)
+    );
+  };
 
   if (loading) {
     return (
@@ -35,7 +54,11 @@ const ThreadsAdvertising = () => {
     <main className="threads-advertising-container">
       <div className="threads-advertising-wrapper">
         {threads.map((thread) => (
-          <ThreadAd key={thread.id} thread={thread} />
+          <ThreadAd
+            key={thread.id}
+            thread={thread}
+            onDelete={handleDeleteThread}
+          />
         ))}
       </div>
     </main>

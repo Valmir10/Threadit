@@ -2,14 +2,17 @@ const express = require("express");
 const db = require("../models/database");
 const router = express.Router();
 
-// all categories
+const defaultUsernames = {
+  news: ["Alice", "Ava", "Charlie"],
+  gym: ["Sabrina", "Eve", "Julia"],
+  food: ["Grace", "Jenna", "Ivy"],
+};
+
 const requiredCategories = ["news", "gym", "food"];
 
-// Get all threads
 router.get("/", (req, res) => {
   let threads = db.prepare("SELECT * FROM threads").all();
 
-  // Controll categories exist
   const foundCategories = threads.map((thread) => thread.category);
   const missingCategories = requiredCategories.filter(
     (cat) => !foundCategories.includes(cat)
@@ -21,41 +24,84 @@ router.get("/", (req, res) => {
       missing: missingCategories,
     });
   }
-
   res.json(threads);
 });
 
-// Get thread and their message
-router.get("/:category", (req, res) => {
-  const { category } = req.params;
+router.get("/:identifier", (req, res) => {
+  const { identifier } = req.params;
+  let thread;
 
-  const thread = db
-    .prepare("SELECT * FROM threads WHERE category = ?")
-    .get(category);
+  if (!isNaN(identifier)) {
+    thread = db.prepare("SELECT * FROM threads WHERE id = ?").get(identifier);
+  } else {
+    thread = db
+      .prepare("SELECT * FROM threads WHERE category = ?")
+      .get(identifier);
+  }
   if (!thread) return res.status(404).json({ error: "Thread not found" });
 
-  const messages = db
+  let messages = db
     .prepare(
-      "SELECT username, user_image, text, created_at FROM messages WHERE thread_id = ? ORDER BY created_at ASC"
+      "SELECT id, username, user_image, text, created_at FROM messages WHERE thread_id = ? ORDER BY created_at ASC"
     )
     .all(thread.id);
 
+  if (defaultUsernames[thread.category]) {
+    const seen = {};
+    messages = messages.filter((msg) => {
+      if (defaultUsernames[thread.category].includes(msg.username)) {
+        if (seen[msg.username]) {
+          return false;
+        } else {
+          seen[msg.username] = true;
+          return true;
+        }
+      }
+      return true;
+    });
+  }
   res.json({ thread, messages });
 });
 
-// Create new thread
 router.post("/", (req, res) => {
-  const { category, headline } = req.body;
-  if (!category || !headline)
-    return res.status(400).json({ error: "Missing fields" });
+  console.log("Request body:", req.body);
 
-  const result = db
-    .prepare("INSERT INTO threads (category, headline) VALUES (?, ?)")
-    .run(category, headline);
-  res.json({ id: result.lastInsertRowid, category, headline });
+  const { category, headline, image_url, text1, text2, text3 } = req.body;
+
+  if (!category || !headline || !text1) {
+    return res
+      .status(400)
+      .json({ error: "Category, headline, and at least text1 are required" });
+  }
+
+  const image = image_url || "/img/default-thread.png";
+
+  try {
+    const safeText2 = text2 && text2.trim() !== "" ? text2 : "";
+    const safeText3 = text3 && text3.trim() !== "" ? text3 : "";
+    const stmt = db.prepare(
+      "INSERT INTO threads (category, headline, image_url, text1, text2, text3) VALUES (?, ?, ?, ?, ?, ?)"
+    );
+
+    const result = stmt.run(
+      category,
+      headline,
+      image,
+      text1,
+      safeText2,
+      safeText3
+    );
+
+    res.status(201).json({
+      message: "Thread created successfully",
+      id: result.lastInsertRowid,
+    });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
 });
 
-// Integrate message and thread
 router.post("/:id/messages", (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
@@ -80,7 +126,6 @@ router.post("/:id/messages", (req, res) => {
   }
 });
 
-// Delete message
 router.delete("/messages/:id", (req, res) => {
   const { id } = req.params;
 
@@ -90,8 +135,21 @@ router.delete("/messages/:id", (req, res) => {
   if (result.changes === 0) {
     return res.status(404).json({ error: "Message not found" });
   }
-
   res.json({ message: "Message deleted successfully", id });
+});
+
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.prepare("DELETE FROM messages WHERE thread_id = ?").run(id);
+
+  const result = db.prepare("DELETE FROM threads WHERE id = ?").run(id);
+
+  if (result.changes === 0) {
+    return res.status(404).json({ error: "Thread not found" });
+  }
+
+  res.json({ message: "Thread deleted successfully", id });
 });
 
 module.exports = router;

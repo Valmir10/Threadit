@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/GroupChatt.css";
 import { FaThumbsUp } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
 import { FaTrash } from "react-icons/fa";
+import { SearchContext } from "./SearchContext";
+import { highlightText } from "../utils/highlightText";
 
 const GroupChat = () => {
   const { category } = useParams();
+  const { searchTerm } = useContext(SearchContext);
   const [thread, setThread] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +18,6 @@ const GroupChat = () => {
   const [likedMessages, setLikedMessages] = useState([]);
   const [isShaking, setShaking] = useState(false);
 
-  // get all threads based on category
   useEffect(() => {
     axios
       .get(`http://localhost:5001/threads/${category}`)
@@ -23,6 +25,7 @@ const GroupChat = () => {
         setThread(res.data.thread);
         setMessages(res.data.messages);
         setLoading(false);
+        localStorage.setItem("lastVisitedThreadId", res.data.thread.id);
       })
       .catch((err) => {
         console.error("Error fetching thread:", err);
@@ -30,7 +33,6 @@ const GroupChat = () => {
       });
   }, [category]);
 
-  // Send message to the server
   const handleSendMessage = () => {
     if (!newMessage.trim()) {
       setShaking(true);
@@ -57,7 +59,6 @@ const GroupChat = () => {
       .catch((err) => console.error("Error sending message:", err));
   };
 
-  //Controll like message
   const toggleLike = (index) => {
     setLikedMessages((prevLiked) =>
       prevLiked.includes(index)
@@ -66,20 +67,17 @@ const GroupChat = () => {
     );
   };
 
-  //Shaking affect on textarea
   const handleCommentClick = () => {
     setShaking(true);
     setTimeout(() => setShaking(false), 500);
   };
 
-  //Delete message
   const handleDeleteMessage = (msg) => {
     axios
-      .delete(`http://localhost:5001/threads/messages/${msg.id}`) // Använd rätt ID
+      .delete(`http://localhost:5001/threads/messages/${msg.id}`)
       .then(() => {
-        setMessages(
-          (prevMessages) =>
-            prevMessages.filter((message) => message.id !== msg.id) // Filtrera bort meddelandet
+        setMessages((prevMessages) =>
+          prevMessages.filter((message) => message.id !== msg.id)
         );
       })
       .catch((err) => console.error("Error deleting message:", err));
@@ -105,11 +103,9 @@ const GroupChat = () => {
                 <h3>r/{thread.category}</h3>
               </div>
             </div>
-
             <div className="group-chat-headline">
-              <h1>{thread.headline}</h1>
+              <h1>{highlightText(thread.headline, searchTerm)}</h1>
             </div>
-
             <div className="text-comments-container">
               {messages.map((msg, index) => (
                 <div key={index} className="comment-box-container">
@@ -121,9 +117,8 @@ const GroupChat = () => {
                       <h3>{msg.username}</h3>
                     </div>
                   </div>
-
                   <div className="user-comment-container">
-                    <h3>{msg.text}</h3>
+                    <h3>{highlightText(msg.text, searchTerm)}</h3>
                   </div>
                   <div className="add-comment-option-container">
                     <div className="add-comment-option-wrapper">
@@ -137,7 +132,6 @@ const GroupChat = () => {
                           }`}
                         />
                       </div>
-
                       {msg.username === "User" && (
                         <div
                           className="delete-comment-container"
@@ -149,7 +143,6 @@ const GroupChat = () => {
                           </div>
                         </div>
                       )}
-
                       <div className="add-comment-button-container">
                         <button onClick={handleCommentClick}>Comment</button>
                       </div>
@@ -160,7 +153,6 @@ const GroupChat = () => {
             </div>
           </div>
         </div>
-
         <div className="write-comment-container">
           <div className="write-comment-wrapper">
             <label className="write-comment-label" htmlFor="comment-message">

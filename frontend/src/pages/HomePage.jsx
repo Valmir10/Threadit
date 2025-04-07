@@ -4,6 +4,7 @@ import ThreadsAdvertising from "../components/ThreadsAdvertising";
 import Sidebar from "../components/Sidebar";
 import "../styles/HomePage.css";
 import AddThread from "../components/AddThread";
+import CreateThreadForm from "../components/CreateThreadForm";
 
 const HomePage = () => {
   return (
@@ -12,6 +13,7 @@ const HomePage = () => {
       <ThreadsAdvertising />
       <AddThread />
       <Sidebar />
+      <CreateThreadForm />
     </div>
   );
 };

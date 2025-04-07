@@ -1,0 +1,103 @@
+.create-thread-form-container {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  left: 40%;
+  top: 22%;
+  height: 63%;
+  width: 33%;
+
+  background-color: #2a2a2e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 2%;
+  z-index: 10;
+}
+
+.create-thread-form-container.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.create-thread-form-container h2 {
+  color: #ffffff;
+  text-align: center;
+}
+
+.create-thread-form-container label {
+  color: #bbbbbb;
+  margin-top: 10px;
+}
+
+.create-thread-form-container input,
+.create-thread-form-container textarea {
+  background-color: #3a3a3d;
+  color: #ffffff;
+  border: 1px solid #555;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.create-thread-form-container input:focus,
+.create-thread-form-container textarea:focus {
+  border: 1px solid #ff4500;
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 69, 0, 0.8);
+}
+
+.create-thread-form-container textarea {
+  height: 100px;
+  resize: none;
+  margin-bottom: 10%;
+}
+
+.submit-button-container {
+  height: 20%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.create-thread-form-container button {
+  height: 40%;
+  width: 100%;
+
+  background: linear-gradient(90deg, #ff4500, #ff8000);
+  color: #fff;
+  border: none;
+
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+.create-thread-form-container button:hover {
+  background: linear-gradient(90deg, #ff8000, #ff4500);
+  box-shadow: 0 0 10px rgba(255, 100, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.6);
+}
+
+@keyframes glowing {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 100, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+  }
+}
+
+.create-thread-form-container button:active {
+  animation: glowing 1s infinite alternate;
+}
